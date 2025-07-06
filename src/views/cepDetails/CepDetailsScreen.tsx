@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text} from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../../App';
+import {styles} from './styles'
 
 type CepDetailsRouteProp = RouteProp<RootStackParamList, 'CepDetails'>;
 
@@ -20,21 +21,3 @@ export default function CepDetailsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-  },
-  item: {
-    fontSize: 18,
-    marginBottom: 12,
-  },
-});
