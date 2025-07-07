@@ -1,34 +1,30 @@
+// src/viewmodels/useCepSearch.ts
+import { useState } from 'react';
 import { Alert } from 'react-native';
 import { fetchCep } from '../service/api/cepService';
-import { CepData } from '../models/CepData';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
-import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
-export function useCepSearch(navigation: NativeStackNavigationProp<RootStackParamList>) {
-  const [numeroCEP, setNumeroCEP] = useState('');
-  const [cepData, setCepData] = useState<CepData | null>(null);
+export function useCepSearch() {
+  const [cep, setCep] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation<any>();
 
-  const handleSearch = async () => {
-    if (!numeroCEP || numeroCEP.trim() === '' || numeroCEP.length < 9) {
-      Alert.alert('Atenção', 'Por favor, digite um CEP válido!');
+  const searchCep = async () => {
+    if (!cep || cep.trim().length < 9) {
+      Alert.alert('Atenção', 'Digite um CEP válido');
       return;
     }
 
     try {
-      console.log('Iniciando busca de CEP...', numeroCEP);
-      const response: CepData = await fetchCep(numeroCEP);
-      setCepData(response);
-      navigation.navigate('CepDetails', { cepData: response });
+      setLoading(true);
+      const data = await fetchCep(cep);
+      setLoading(false);
+      navigation.navigate('CepDetails', { cepData: data });
     } catch (error: any) {
-      Alert.alert('Erro', error.message || 'Erro desconhecido');
+      setLoading(false);
+      Alert.alert('Erro', error.message || 'Erro ao buscar CEP');
     }
   };
 
-  return {
-    numeroCEP,
-    setNumeroCEP,
-    handleSearch,
-    cepData,
-  };
+  return { cep, setCep, loading, searchCep };
 }
